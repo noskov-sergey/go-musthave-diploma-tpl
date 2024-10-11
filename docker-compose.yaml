@@ -1,0 +1,12 @@
+version: '3'
+
+volumes:
+  postgres_volume:
+
+services:
+  accrual:
+    build:
+      dockerfile: accrual.Dockerfile
+    ports:
+      - "8090:8090"
+    restart: on-failure
