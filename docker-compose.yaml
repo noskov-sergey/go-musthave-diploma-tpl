@@ -8,5 +8,12 @@ services:
     build:
       dockerfile: accrual.Dockerfile
     ports:
-      - "8090:8090"
+      - "8090:8080"
     restart: on-failure
+
+#  gophermart:
+#    build:
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8091:8081"
+#    restart: on-failure
