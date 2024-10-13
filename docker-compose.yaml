@@ -8,12 +8,35 @@ services:
     build:
       dockerfile: accrual.Dockerfile
     ports:
-      - "8090:8080"
+      - "${ACCRUAL_PORT}:8080"
     restart: on-failure
 
-#  gophermart:
-#    build:
-#      dockerfile: Dockerfile
-#    ports:
-#      - "8091:8081"
-#    restart: on-failure
+  gophermart:
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - "${GOPHER_PORT}:8081"
+    depends_on:
+      - db
+    restart: on-failure
+
+  db:
+    image: postgres:14-alpine3.20
+    environment:
+      - "POSTGRES_DB=${DATABASE_NAME}"
+      - "POSTGRES_USER=${DATABASE_USER}"
+      - "POSTGRES_PASSWORD=${DATABASE_PASSWORD}"
+    ports:
+      - "${PG_PORT}:5432"
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data
+
+  migrator:
+    build:
+      context: .
+      dockerfile: migration.Dockerfile
+    depends_on:
+      - db
+    restart: on-failure
+    env_file:
+      - ./.env
